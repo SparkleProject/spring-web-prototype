@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.StaffLoginDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.StaffLogin" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="staff_id" property="staffId" jdbcType="INTEGER" />
+    <result column="login_date" property="loginDate" jdbcType="TIMESTAMP" />
+    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <resultMap id="BaseResultMapWithStaffName" type="com.lintech.entity.StaffLogin" extends="BaseResultMap">
+	 	<result column="staff_name" property="staffName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from t_staff_login
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="save" parameterType="com.lintech.entity.StaffLogin" >
+    insert into t_staff_login (id, staff_id,login_ip)
+    values (#{id,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER},#{loginIp,jdbcType=VARCHAR})
+  </insert>
+  <update id="update" parameterType="com.lintech.entity.StaffLogin" >
+    update t_staff_login
+    set staff_id = #{staffId,jdbcType=INTEGER},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      login_ip = #{loginIp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="whereClause">
+	<where>
+		 <if test="staffId != null" >
+	        and t.staff_id = #{staffId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="loginDate != null" >
+	        and t.login_date = #{loginDate}
+	      </if>
+	      <if test="loginIp != null" >
+	        and t.login_ip = #{loginIp,jdbcType=VARCHAR}
+	      </if>
+	      <if test="loginDateFrom != null" >
+	      	<![CDATA[
+	         and t.login_date >=#{loginDateFrom}
+	         ]]>
+	      </if>
+	      <if test="loginDateTo != null" >
+	      	<![CDATA[
+	         and t.login_date <=#{loginDateTo}
+	      	]]>
+	      </if>
+	</where>
+	</sql>
+	
+   <select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMapWithStaffName">
+		 select t.*,t1.name as staff_name from t_staff_login t
+		left join t_staff t1 on t.staff_id=t1.id
+		where t.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMapWithStaffName">
+		select t.*,t1.name as staff_name from t_staff_login t
+		left join t_staff t1 on t.staff_id=t1.id
+		<include refid="whereClause"/>
+	</select>
+</mapper>

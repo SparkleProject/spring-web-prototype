@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.RoleStaffDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.RoleStaff" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="staff_id" property="staffId" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="save" parameterType="com.lintech.entity.RoleStaff" >
+    insert into t_role_staff (id, role_id, staff_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER}
+      )
+  </insert>
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from t_role_staff
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByClause">
+    	delete from t_role_staff
+	     <where>
+		       <if test="id != null" >
+		       and id = #{id,jdbcType=INTEGER}
+		      </if>
+		       <if test="roleId != null" >
+		       and role_id = #{roleId,jdbcType=INTEGER}
+		      </if>
+		      <if test="staffId != null" >
+		        and staff_id = #{staffId,jdbcType=INTEGER}
+		      </if>
+	     </where>
+  </delete>
+  <sql id="whereClause">
+	 	<where>
+          <if test="id != null" >
+	       and t.id = #{id,jdbcType=INTEGER}
+	      </if>
+	       <if test="roleId != null" >
+	       and t.role_id = #{roleId,jdbcType=INTEGER}
+	      </if>
+	      <if test="staffId != null" >
+	        and t.staff_id = #{staffId,jdbcType=INTEGER}
+	      </if>
+	    </where>
+	</sql>
+  <update id="update" parameterType="com.lintech.entity.RoleStaff" >
+    update t_role_staff
+    set role_id = #{roleId,jdbcType=INTEGER},
+      staff_id = #{staffId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_role_staff where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select t.*,t1.code as role_code from t_role_staff t
+		left join t_role t1 on t.role_id=t1.id
+		<include refid="whereClause"/>
+	</select>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.CompanyDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Company" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="domain" property="domain" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="favicon" property="favicon" jdbcType="VARCHAR" />
+    <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <insert id="save" parameterType="com.lintech.entity.Company">
+	INSERT INTO `t_company` (`id`, `code`, `name`, `domain`, `website`, `summary`, `logo`, `icon`,`favicon`,`keywords`,`description`, `province`, `city`, `address`, `coordinate`,`email`, `tel`, `seq`)
+    values (
+    #{id,jdbcType=INTEGER}, 
+    #{code,jdbcType=VARCHAR}, 
+    #{name,jdbcType=VARCHAR}, 
+    #{domain,jdbcType=VARCHAR},
+     #{website,jdbcType=VARCHAR}, 
+     #{summary,jdbcType=VARCHAR},
+     #{logo,jdbcType=VARCHAR},
+     #{icon,jdbcType=VARCHAR},
+     #{favicon,jdbcType=VARCHAR},
+     #{keywords,jdbcType=VARCHAR},
+     #{description,jdbcType=VARCHAR},
+     #{province,jdbcType=VARCHAR},
+     #{city,jdbcType=VARCHAR},
+     #{address,jdbcType=VARCHAR},
+     #{coordinate,jdbcType=VARCHAR},
+     #{email,jdbcType=VARCHAR},
+     #{tel,jdbcType=VARCHAR},
+     #{seq,jdbcType=INTEGER}
+     )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_company where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Company">
+	  UPDATE t_company
+		SET 
+			code = #{code,jdbcType=VARCHAR}, 
+			name = #{name,jdbcType=VARCHAR}, 
+			domain = #{domain,jdbcType=VARCHAR},
+			website = #{website,jdbcType=VARCHAR}, 
+			summary = #{summary,jdbcType=VARCHAR},
+			logo = #{logo,jdbcType=VARCHAR},
+			icon = #{icon,jdbcType=VARCHAR},
+			favicon = #{favicon,jdbcType=VARCHAR},
+			keywords = #{keywords,jdbcType=VARCHAR},
+     		description = #{description,jdbcType=VARCHAR},
+			province = #{province,jdbcType=VARCHAR},
+			city = #{city,jdbcType=VARCHAR},
+			address = #{address,jdbcType=VARCHAR},
+			coordinate = #{coordinate,jdbcType=VARCHAR},
+			email = #{email,jdbcType=VARCHAR},
+			tel = #{tel,jdbcType=VARCHAR},
+			seq = #{seq,jdbcType=INTEGER}
+		WHERE
+			id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="code != null">
+				and code=#{code}
+			</if>
+			<if test="name != null">
+				and name like  '%${name}%'
+			</if>
+			<if test="domain != null">
+				and domain like  '%${domain}%'
+			</if>
+			<if test="province != null">
+				and province = #{province,jdbcType=VARCHAR}
+			</if>
+			<if test="city != null">
+				and city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and email like  '%${email}%'
+			</if>
+			<if test="tel != null">
+				and tel like  '%${tel}%'
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_company where id = #{id}
+	</select>
+	
+	<select id="findOneByCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_company where code = #{code}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_company
+		<include refid="whereClause"/>
+	</select>
+</mapper>

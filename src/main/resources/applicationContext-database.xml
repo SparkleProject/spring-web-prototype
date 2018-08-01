@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+	default-lazy-init="false">
+
+	<context:property-placeholder
+		ignore-resource-not-found="true" location="classpath*:/config.properties" />
+
+	<context:component-scan base-package="com.forex,com.lintech.dao,com.lintech.service,com.lintech.security,com.lintech.core.task" />
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="mapperLocations" value="classpath*:mapper*/**/*Mapper.xml" /> -->
+		 <property name="mapperLocations" value="classpath*:com/lintech/dao/*Mapper.xml"></property>  
+		<property name="plugins">
+			<list>
+				<bean class="com.lintech.core.mybatis.MySQLPaginationInterceptor" />
+				<!-- <bean class="com.lintech.core.mybatis.TableRouteInterceptor" /> -->
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.lintech.dao" />
+		<property name="annotationClass" value="com.lintech.core.mybatis.MyBatis" />
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- 事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 声明式事务,unchecked exceptions 触发或指定 tx:method 'rollback-for'属性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 读取数据 -->
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="load*" read-only="true" />
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="criteria*" read-only="true" />
+
+			<!-- 操作数据 -->
+			<tx:method name="init*" read-only="false" />
+			<tx:method name="insert*" read-only="false" />
+			<tx:method name="update*" read-only="false" />
+			<tx:method name="save*" read-only="false" />
+			<tx:method name="add*" read-only="false" />
+			<tx:method name="create*" read-only="false" />
+			<tx:method name="del*" read-only="false" />
+			<tx:method name="undel*" read-only="false" />
+			<tx:method name="remove*" read-only="false" />
+			<tx:method name="batchCommit*" read-only="false" />
+			<tx:method name="syn*" read-only="false" />
+
+			<!-- 流程相关 -->
+			<tx:method name="start*" read-only="false" />
+			<tx:method name="commit" read-only="false" />
+			<tx:method name="reject*" read-only="false" />
+
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- AOP -->
+	<aop:config>
+		<aop:pointcut id="serviceOperation" expression="execution(* *..*Service.*(..))" />
+		<aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" />
+	</aop:config>
+
+	<!-- druid datasource @see http://code.alibabatech.com/wiki/pages/viewpage.action?pageId=7672790 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <property name="minIdle" value="1" /> 
+        <property name="maxActive" value="20" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+       <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+       <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+       <property name="minEvictableIdleTimeMillis" value="300000" />
+
+       <property name="validationQuery" value="select 1" />
+       <property name="testWhileIdle" value="true" />
+       <property name="testOnBorrow" value="false" />
+       <property name="testOnReturn" value="false" />
+
+       <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+       <property name="poolPreparedStatements" value="true" />
+       <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	   <property name="filters" value="stat,log4j" />
+	</bean>
+
+	<!-- c3p0 datasource -->
+  <!--  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean> -->
+	
+	<bean id="log4jConfig" class="com.lintech.core.Log4jConfig">  
+	    <constructor-arg name="reload" value="${log4j.config.reload}"/>  
+	    <constructor-arg name="interval" value="${log4j.config.reload.interval}"/>  
+	</bean> 
+</beans>

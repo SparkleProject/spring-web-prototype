@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.ProductDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Product" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="profit" property="profit" jdbcType="VARCHAR" />
+    <result column="require" property="require" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <insert id="save" parameterType="com.lintech.entity.Product">
+	INSERT INTO `t_product` (`id`, `company_code`, `title`,`name`, `profit`, `require`, `content`, `insert_time`, `update_time`, `seq`)  
+    values (
+     #{id,jdbcType=INTEGER}, 
+     #{companyCode,jdbcType=VARCHAR}, 
+     #{title,jdbcType=VARCHAR}, 
+     #{name,jdbcType=VARCHAR}, 
+     #{profit,jdbcType=VARCHAR},
+     #{require,jdbcType=VARCHAR}, 
+     #{content,jdbcType=VARCHAR},
+     #{insertTime,jdbcType=TIMESTAMP},
+     #{updateTime,jdbcType=TIMESTAMP},
+     #{seq,jdbcType=INTEGER}
+     )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_product where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Product">
+	  UPDATE t_product
+		SET 
+			company_code =  #{companyCode,jdbcType=VARCHAR}, 
+			title =  #{title,jdbcType=VARCHAR}, 
+			name =  #{name,jdbcType=VARCHAR}, 
+			profit =  #{profit,jdbcType=VARCHAR},
+			`require` =  #{require,jdbcType=VARCHAR}, 
+			content =  #{content,jdbcType=VARCHAR},
+			insert_time =  #{insertTime,jdbcType=TIMESTAMP},
+			update_time =  #{updateTime,jdbcType=TIMESTAMP},
+			seq =  #{seq,jdbcType=INTEGER}
+		WHERE
+			id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="companyCode != null">
+				and company_code=#{companyCode,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_product where id = #{id}
+	</select>
+	
+	<select id="findOneByCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_product where company_code = #{companyCode}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select p.*,c.name company_name from t_product p 
+		left join t_company c
+		on p.company_code=c.code
+		<include refid="whereClause"/>
+		order by p.company_code,p.seq
+	</select>
+</mapper>

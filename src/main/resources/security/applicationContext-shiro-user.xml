@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+	default-lazy-init="false">
+	<description>Apache Shiro</description>
+	
+	<context:property-placeholder
+		ignore-resource-not-found="true" location="classpath*:/config.properties" />
+
+	<bean id="userShiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+	
+	<bean id="userCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">  
+		<property name="hashAlgorithmName" value="MD5"/>
+        <property name="storedCredentialsHexEncoded" value="true"/>
+        <property name="hashIterations" value="2" />
+	</bean>  
+
+	<bean id="userShiroRealm" class="com.lintech.security.UserShiroRealm">
+		 <property name="userService" ref="userService"/>
+		 <property name="roleResService" ref="roleResService"/>
+		 <property name="roleService" ref="roleService"/>
+		 <property name="cacheManager" ref="userShiroCacheManager" />
+		 <property name="credentialsMatcher" ref="userCredentialsMatcher"/> 
+	</bean>
+
+	<bean id="userSessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="usid" />
+		<property name="maxAge" value="-1"/>
+		<property name="httpOnly" value="true" />
+	</bean>
+
+	<bean id="userSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionIdCookie" ref="userSessionIdCookie" />
+	</bean>
+
+	<bean id="userRememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="urm" />
+		<property name="httpOnly" value="true" />
+		<property name="maxAge" value="604800" />
+	</bean>
+	
+	<bean id="userRememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="L0yFIFr5SAc7ffRZRojndw==" />
+		<property name="cookie" ref="userRememberMeCookie" />
+	</bean>
+
+	<bean id="userSecurityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="userShiroRealm" />
+		<property name="sessionManager" ref="userSessionManager" />
+		<property name="rememberMeManager" ref="userRememberMeManager" />
+	</bean>
+
+	<bean id="userShiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="userSecurityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="successUrl" value="/user/index" />
+		<property name="unauthorizedUrl" value="/403.jsp" />
+		<property name="filterChainDefinitions">
+			<value>
+				/login=authc
+				/assets/**=anon
+				/user/static/**=anon
+				/user/logout=userLogout
+				/user/**=user
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="userLogout" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+		<property name="redirectUrl" value="/login" />
+	</bean>
+	
+</beans>

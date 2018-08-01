@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.CodeDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Code" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+    <result column="enable" property="enable" jdbcType="BIT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <insert id="save" parameterType="com.lintech.entity.Code">
+	  insert into t_code (id, type, code, 
+      name, value, seq, enable, 
+      description)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{seq,jdbcType=INTEGER}, #{enable,jdbcType=BIT}, 
+      #{description,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_code where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Code">
+	   update t_code
+	    set 
+	      type = #{type,jdbcType=VARCHAR},
+	      code = #{code,jdbcType=VARCHAR},
+	      name = #{name,jdbcType=VARCHAR},
+	      value = #{value,jdbcType=VARCHAR},
+	      seq = #{seq,jdbcType=INTEGER},
+	      enable = #{enable,jdbcType=BIT},
+	      description = #{description,jdbcType=VARCHAR}
+	     where
+	      id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="type != null">
+				and type = #{type,jdbcType=VARCHAR}
+			</if>
+			<if test="code != null">
+				and code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="name != null">
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="value != null">
+				and value = #{value,jdbcType=VARCHAR}
+			</if>
+			<if test="seq != null">
+				and seq = #{seq,jdbcType=INTEGER}
+			</if>
+			<if test="enable != null">
+				and enable = #{enable,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_code where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_code
+		<include refid="whereClause"/>
+		order by seq
+	</select>
+	
+	
+	<select id="findCombobox" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select c.name textField,c.value valueField from t_code c
+		left join t_code_type t on c.type=t.id
+		where t.code='${_parameter}' 
+		order by c.seq
+	</select>
+</mapper>

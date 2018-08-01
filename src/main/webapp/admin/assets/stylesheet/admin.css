@@ -1,0 +1,148 @@
+.easyui-layout{
+   visibility: hidden;
+}
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+	font-size: 12px;
+}
+
+input {
+	border: 1px solid #95B8E7;
+}
+
+.logo {
+	font-size: 22px;
+}
+
+.main-tabs .tabs-header {
+	background: none;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	color: #666;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 80px;
+}
+
+.fitem input {
+	display: inline-block;
+	width: 150px;
+}
+
+.easyui-layout-west .fitem {
+	padding-left: 10px;
+}
+
+.fitem .input-200 input {
+	width: 200px;
+}
+
+#fm .rlab {
+	padding-left: 30px;
+}
+
+.query-table {
+	padding-top: 5px;
+	table-layout: fixed;
+}
+
+.query-table .ltd {
+	width: 55px;
+}
+
+/* .query-table input {
+	width: 150px;
+}
+
+.query-table .operate {
+	height: 36px;
+} */
+
+.query-table .operate a{
+	margin-right: 15px;
+	*margin-right: 7px;
+}
+
+.dlg-table {
+	table-layout: fixed;
+}
+
+.dlg-table td{
+	/* border: 1px solid #ccc; */
+}
+
+.dlg-table .ltd {
+	width: 100px;
+	text-align: right;
+	/* background-color: #eaf2ff; */
+}
+
+/* .dlg-table .rtd input {
+	width: 200px;
+}
+
+.dlg-table .rtd .combo {
+	width: 198px;
+}
+.dlg-table .rtd .combo-text {
+	width: 198px;
+} */
+
+.icon{
+	display: inline-block;
+	vertical-align: baseline;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	font-size: 12px;
+	padding: 0;
+	margin: 0;
+}
+
+/* extends */
+
+.icon-user{
+	background:url('../image/icon/user.png') no-repeat center center;
+}
+.icon-theme{
+	background:url('../image/icon/theme.png') no-repeat center center;
+}
+.icon-logout{
+	background:url('../image/icon/logout.png') no-repeat center center;
+}
+.icon-forbidden{
+	background:url('../image/icon/forbidden.png') no-repeat center center;
+}
+.icon-pause{
+	background:url('../image/icon/pause.gif') no-repeat center center;
+}
+.icon-resume{
+	background:url('../image/icon/resume.gif') no-repeat center center;
+}
+.icon-run{
+	background:url('../image/icon/run.gif') no-repeat center center;
+}
+.icon-stop{
+	background:url('../image/icon/stop.gif') no-repeat center center;
+}
+.icon-time{
+	background:url('../image/icon/time.gif') no-repeat center center;
+}
+
+.textbox{height: 26px;width: 150px;}
+
+.dlg-table .textbox{height: 26px;width: 200px;}

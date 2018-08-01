@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.FunctionDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Function" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="save" parameterType="com.lintech.entity.Function">
+	 insert into t_function (id, code, name, 
+      description)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_function where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Function">
+	update t_function
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_function where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_function
+		<include refid="whereClause"/>
+	</select>
+	
+	<sql id="whereClause">
+		<where>
+		  <if test="name != null" >
+	        and name like #{name}
+	      </if>
+		</where>
+	</sql>
+</mapper>

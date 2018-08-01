@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.RoleDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Role" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="save" parameterType="com.lintech.entity.Role" >
+    insert into t_role (id, code, name, 
+      description)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_role where id = #{id}
+	</delete>
+  <update id="update" parameterType="com.lintech.entity.Role" >
+    update t_role
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_role where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_role
+		<where>
+		  <if test="code != null" >
+	        and code = #{code,jdbcType=INTEGER}
+	      </if>
+		  <if test="name != null" >
+	        and name = #{name,jdbcType=INTEGER}
+	      </if>
+		</where>
+	</select>
+</mapper>

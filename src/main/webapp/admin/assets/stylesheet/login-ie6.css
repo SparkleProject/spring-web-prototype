@@ -1,0 +1,8 @@
+.main h3{line-height:normal;font-size:26px;color:#fff;background:none;width:400px;font-family:simhei;font-weight:normal}
+.panel .shadow-bottom{width:461px;height:1px;bottom:-1px}
+.panel .shadow-top{height:1px;top:-1px}
+.panel .shadow-left{width:1px;left:-1px;filter:alpha(opacity=20)}
+.panel .shadow-right{height:310px;width:1px;right:-1px;height:309px;bottom:0}
+.copyright,.copyright a{color:#7d7d7d}
+.copy-item{filter:none}
+.copy-item-img{filter:alpha(opacity=65)}

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.UserLoginDao">
+	<resultMap id="userLoginResultMap" type="com.lintech.entity.UserLogin">
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+	    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+	    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+	    <result column="state" jdbcType="INTEGER" property="state" />
+	    <result column="ip" jdbcType="VARCHAR" property="ip" />
+	    <result column="country" jdbcType="VARCHAR" property="country" />
+	    <result column="area" jdbcType="VARCHAR" property="area" />
+	    <result column="region" jdbcType="VARCHAR" property="region" />
+	    <result column="city" jdbcType="VARCHAR" property="city" />
+	    <result column="isp" jdbcType="VARCHAR" property="isp" />
+	    <result column="addr" jdbcType="VARCHAR" property="addr" />
+	    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+	  </resultMap>
+
+	<insert id="save" parameterType="com.lintech.entity.UserLogin"  useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `t_user_login` 
+		(`id`, `user_id`, `user_name`, `session_id`, `state`, `ip`, `country`, `area`, `region`, `city`, `isp`,`addr`, `login_time`) 
+		VALUES
+			(
+			#{id,jdbcType=VARCHAR},
+			#{userId,jdbcType=VARCHAR},
+			#{userName,jdbcType=VARCHAR},
+			#{sessionId,jdbcType=VARCHAR},
+			#{state},
+			#{ip,jdbcType=VARCHAR},
+			#{country,jdbcType=VARCHAR},
+			#{area,jdbcType=VARCHAR},
+			#{region,jdbcType=VARCHAR},
+			#{city,jdbcType=VARCHAR},
+			#{isp,jdbcType=VARCHAR},
+			#{addr,jdbcType=VARCHAR},
+			now()
+			)
+	</insert>
+	
+	
+	<update id="clearstate" parameterType="java.lang.String">
+		UPDATE	`t_user_login` 
+		SET
+			`state`=0
+		WHERE
+		    user_id= #{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="update" parameterType="com.lintech.entity.UserLogin">
+		UPDATE	`t_user_login` 
+		SET
+			`user_id`= #{userId,jdbcType=VARCHAR},
+			`user_name`= #{userName,jdbcType=VARCHAR},
+			`session_id`=#{sessionId,jdbcType=VARCHAR},
+			`state`=#{state},
+			`ip`= #{ip,jdbcType=VARCHAR},
+			`country`= #{country,jdbcType=VARCHAR},
+			`area`=#{area,jdbcType=VARCHAR},
+			`region`= #{region,jdbcType=VARCHAR},
+			`city`= #{city,jdbcType=VARCHAR},
+			`isp`= #{isp,jdbcType=VARCHAR},
+			`addr`= #{addr,jdbcType=VARCHAR}
+		WHERE
+		    id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from `t_user_login` where id =#{id}
+	</delete>
+	
+	<select id="count"  resultType="java.lang.Long">
+		select count(*) from `t_user_login`
+	</select>
+
+	<select id="findAll" resultMap="userLoginResultMap">
+		select * from `t_user_login`
+		<include refid="whereClause"/>
+	</select>
+
+	<select id="countAll" resultType="java.lang.Long">
+		select count(*) from `t_user_login`
+		<include refid="whereClause"/>
+	</select>
+
+	<select id="findOne" parameterType="java.lang.String" 	resultMap="userLoginResultMap">
+		select * from `t_user_login` where id=#{id}
+	</select>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="state!=null">
+				and state=#{state}
+			</if>
+			<if test="sessionId!=null">
+				and session_id=#{sessionId}
+			</if>
+			<if test="ip!=null">
+				and ip=#{ip}
+			</if>
+		</where>
+	</sql>
+</mapper>

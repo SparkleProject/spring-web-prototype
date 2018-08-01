@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+	default-lazy-init="false">
+	<description>Apache Shiro</description>
+	
+	<context:property-placeholder
+		ignore-resource-not-found="true" location="classpath*:/config.properties" />
+	
+	
+	<bean id="adminShiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManager" ref="cacheManager" />
+	</bean> 
+	
+	
+	<bean id="adminCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">  
+		<property name="hashAlgorithmName" value="MD5"/>
+        <property name="storedCredentialsHexEncoded" value="true"/>
+        <property name="hashIterations" value="2" />
+	</bean>  
+
+	<bean id="adminShiroRealm" class="com.lintech.security.AdminShiroRealm">
+		 <property name="staffService" ref="staffService"/>
+		 <property name="roleResService" ref="roleResService"/>
+		 <property name="roleService" ref="roleService"/>
+		 <property name="cacheManager" ref="adminShiroCacheManager" />
+		 <property name="credentialsMatcher" ref="adminCredentialsMatcher"/> 
+	</bean>
+
+	<bean id="adminSessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="asid" />
+		<property name="maxAge" value="-1"/>
+		<property name="httpOnly" value="true" />
+	</bean>
+
+	<bean id="adminSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionIdCookie" ref="adminSessionIdCookie" />
+	</bean>
+
+	<bean id="adminRememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="arm" />
+		<property name="httpOnly" value="true" />
+		<property name="maxAge" value="604800" />
+	</bean>
+	
+	<bean id="adminRememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="uVO/W6nH3ogULFTA7aEbKQ==" />
+		<property name="cookie" ref="adminRememberMeCookie" />
+	</bean>
+
+	<bean id="adminSecurityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="adminShiroRealm" />
+		<property name="sessionManager" ref="adminSessionManager" />
+		<property name="rememberMeManager" ref="adminRememberMeManager" />
+	</bean>
+
+	<bean id="adminShiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="adminSecurityManager" />
+		<property name="loginUrl" value="/admin/login" />
+		<property name="successUrl" value="/admin/" />
+		<property name="unauthorizedUrl" value="/admin/error/403" />
+		<property name="filterChainDefinitions">
+			<value>
+				/admin/language/**=anon
+				/admin/assets/**=anon
+				/admin/error/**=anon
+				/admin/login=authc
+				/admin/logout=adminLogout
+				/admin/**=adminAuthc
+			</value>
+		</property>
+	</bean>
+
+    <bean id="adminAuthc" class="com.lintech.security.AdminAuthorizationFilter">
+	    <property name="roleResService" ref="roleResService"/>
+		<property name="roleStaffService" ref="roleStaffService"/>
+		<property name="cacheManager" ref="adminShiroCacheManager" />
+		<property name="exclusions">
+		   <list>
+		    <value>/admin/</value>
+		    <value>/admin/dashboard</value>
+		    <value>/admin/role-res/**</value>
+		   </list>
+	   </property>
+	</bean> 
+	
+	<bean id="adminLogout" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+		<property name="redirectUrl" value="/admin/login" />
+	</bean>
+	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="adminSecurityManager" />
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+</beans>

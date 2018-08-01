@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+  <mapping path="/ueditor/*" exclue="true"/>
+  <mapping path="/admin/*" decorator="/WEB-INF/admin/decorator/default.jsp"/>
+  <mapping path="/admin/login" exclue="true"/>
+  <mapping path="/admin/error/*" exclue="true"/>
+  <mapping path="/admin/assets/*" exclue="true"/>
+  <mapping path="/user/*" decorator="/WEB-INF/user/decorator/default.jsp"/>
+  <mapping path="/*.html" exclue="true"/>
+</sitemesh>

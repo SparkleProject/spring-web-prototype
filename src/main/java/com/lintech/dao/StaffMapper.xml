@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.StaffDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Staff" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="year_entry" property="yearEntry" jdbcType="VARCHAR" />
+    <result column="year_separation" property="yearSeparation" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="INTEGER" />
+    <result column="dept_id" property="deptId" jdbcType="VARCHAR" />
+    <result column="position_id" property="positionId" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="marital" property="marital" jdbcType="BIT" />
+    <result column="household" property="household" jdbcType="VARCHAR" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modificator" property="modificator" jdbcType="INTEGER" />
+    <result column="enabled" property="enabled" jdbcType="INTEGER" />
+    <result column="locked" property="locked" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.lintech.entity.Staff" extends="BaseResultMap" >
+    <result column="resume" property="resume" jdbcType="LONGVARCHAR" />
+    <result column="evaluation" property="evaluation" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <insert id="save" parameterType="com.lintech.entity.Staff">
+	  insert into t_staff (id, name, login_name, 
+      password, year_entry, year_separation, company_id,
+      dept_id, position_id, sex, 
+      birthday, mobile, education, 
+      nation, marital, household, 
+      profession, address, email, 
+      id_card, status, create_time, 
+      creator, modify_time, modificator, 
+      resume, evaluation,follow)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{yearEntry,jdbcType=VARCHAR}, #{yearSeparation,jdbcType=VARCHAR}, #{companyId,jdbcType=INTEGER}, 
+      #{deptId,jdbcType=VARCHAR}, #{positionId,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, 
+      #{birthday,jdbcType=DATE}, #{mobile,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
+      #{nation,jdbcType=VARCHAR}, #{marital,jdbcType=BIT}, #{household,jdbcType=VARCHAR}, 
+      #{profession,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{idCard,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP}, #{modificator,jdbcType=INTEGER}, 
+      #{resume,jdbcType=LONGVARCHAR}, #{evaluation,jdbcType=LONGVARCHAR},#{follow})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_staff where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Staff">
+	  update t_staff
+    set name = #{name,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      year_entry = #{yearEntry,jdbcType=VARCHAR},
+      year_separation = #{yearSeparation,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=INTEGER},
+      dept_id = #{deptId,jdbcType=VARCHAR},
+      position_id = #{positionId,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=BIT},
+      birthday = #{birthday,jdbcType=DATE},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      education = #{education,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      marital = #{marital,jdbcType=BIT},
+      household = #{household,jdbcType=VARCHAR},
+      profession = #{profession,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=INTEGER},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modificator = #{modificator,jdbcType=INTEGER},
+      resume = #{resume,jdbcType=VARCHAR},
+      evaluation = #{evaluation,jdbcType=VARCHAR},
+      follow = #{follow,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="changePassword">
+	 update t_staff
+      set 
+      password = #{password}
+    where 
+      id = #{id}
+    </update>
+	<update id="changeEanbled">
+	 update t_staff
+      set 
+      enabled = #{enabled}
+    where 
+      id = #{id}
+    </update>
+	
+	<sql id="where">
+		<where>
+		  <if test="name != null" >
+	        and name like CONCAT(CONCAT('%', #{name}),'%')
+	      </if>
+	      <if test="loginName != null" >
+	        and login_name = #{loginName,jdbcType=VARCHAR}
+	      </if>
+	      <if test="jobyear != null" >
+	        and year_entry = #{yearEntry,jdbcType=VARCHAR}
+	      </if>
+	      <if test="companyId != null" >
+	        and company_id = #{companyId,jdbcType=INTEGER}
+	      </if>
+	      <if test="deptId != null" >
+	        and dept_id = #{deptId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="positionid != null" >
+	        and position_id = #{positionId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="sex != null" >
+	       and  sex = #{sex,jdbcType=VARCHAR}
+	      </if>
+	      <if test="birthday != null" >
+	        and birthday = #{birthday,jdbcType=DATE}
+	      </if>
+	      <if test="mobile != null" >
+	       and  mobile = #{mobile,jdbcType=VARCHAR}
+	      </if>
+	      <if test="education != null" >
+	       and  education = #{education,jdbcType=VARCHAR}
+	      </if>
+	      <if test="nation != null" >
+	        and nation = #{nation,jdbcType=VARCHAR}
+	      </if>
+	      <if test="marital != null" >
+	        and marital = #{marital,jdbcType=VARCHAR}
+	      </if>
+	      <if test="household != null" >
+	        and household = #{household,jdbcType=VARCHAR}
+	      </if>
+	      <if test="profession != null" >
+	        and profession = #{profession,jdbcType=VARCHAR}
+	      </if>
+	      <if test="address != null" >
+	        and address = #{address,jdbcType=VARCHAR}
+	      </if>
+	      <if test="email != null" >
+	        and email = #{email,jdbcType=VARCHAR}
+	      </if>
+	      <if test="idcardno != null" >
+	        and id_card = #{idCard,jdbcType=VARCHAR}
+	      </if>
+	      <if test="jobstatus != null" >
+	        and status = #{status,jdbcType=VARCHAR}
+	      </if>
+	      <if test="password != null" >
+	        and password = #{password,jdbcType=VARCHAR}
+	      </if>
+		</where>
+	</sql>
+	
+	<sql id="cloumnWithoutBLOBs">
+	  id, name, login_name, 
+      password, year_entry, year_separation, 
+      dept_id, position_id, sex, 
+      birthday, mobile, education, 
+      nation, marital, household, 
+      profession, address, email, 
+      id_card, status, create_time, 
+      creator, modify_time, modificator,enabled,locked
+	</sql>
+	
+	<select id="findOne" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select * from t_staff where id = #{id}
+	</select>
+	
+	<select id="findOneByLoginName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from t_staff
+		where login_name=#{loginName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select 
+		<include refid="cloumnWithoutBLOBs"/>
+		from t_staff
+		<include refid="where"/>
+		order by login_name asc
+	</select>
+	
+	<select id="findAllMap" resultType="Map">
+		select  
+		 id,
+		 id_card 'idCard'
+		 from t_staff t
+		
+	</select>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.TaskDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Task" >
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="period" jdbcType="TINYINT" property="period" />
+    <result column="target_object" jdbcType="VARCHAR" property="targetObject" />
+    <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modificator" jdbcType="VARCHAR" property="modificator" />
+  </resultMap>
+  <insert id="save" parameterType="com.lintech.entity.Task">
+ 	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	SELECT LAST_INSERT_ID()
+	</selectKey>
+ 	insert into t_task (id, name, period, 
+      target_object, begin_date, 
+      end_date, cron_expression, description, state,
+      create_date, creator, 
+      modify_date, modificator)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{period,jdbcType=TINYINT}, 
+      #{targetObject,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{cronExpression,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{modificator,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_task where id = #{id}
+	</delete>
+	
+	<update id="changeState">
+	 update t_task
+      set 
+      state = #{state}
+    where 
+      id = #{id}
+    </update>
+	<update id="changeAllState">
+	 update t_task
+      set 
+      state = #{state}
+    </update>
+	<update id="update" parameterType="com.lintech.entity.Task">
+	     update t_task
+    set name = #{name,jdbcType=VARCHAR},
+      period = #{period,jdbcType=TINYINT},
+      target_object = #{targetObject,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      cron_expression = #{cronExpression,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      modificator = #{modificator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="type != null">
+				and period = #{period,jdbcType=TINYINT}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_task where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_task
+		<include refid="whereClause"/>
+	</select>
+</mapper>

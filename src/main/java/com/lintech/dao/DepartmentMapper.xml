@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.DepartmentDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.entity.Department" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="save" parameterType="com.lintech.entity.Department">
+	 insert into t_department (id, name, pid, 
+      seq, description)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, 
+      #{seq,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_department where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.entity.Department">
+	   update t_department
+    set name = #{name,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      seq = #{seq,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="findOne" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_department where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_department
+	</select>
+</mapper>

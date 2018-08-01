@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lintech.dao.MenuDao" >
+  <resultMap id="BaseResultMap" type="com.lintech.core.easyui.Menu" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="target" property="target" jdbcType="VARCHAR" />
+    <result column="relative" property="relative" jdbcType="BIT" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+    <result column="enable" property="enable" jdbcType="BIT" />
+    <result column="visible" property="visible" jdbcType="BIT" />
+  </resultMap>
+ 
+  <insert id="save" parameterType="com.lintech.core.easyui.Menu">
+	 insert into t_menu (id, pid, name, 
+      url, target, relative, 
+      icon, seq, enable, visible
+      )
+    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, #{relative,jdbcType=BIT}, 
+      #{icon,jdbcType=VARCHAR}, #{seq,jdbcType=INTEGER}, #{enable,jdbcType=BIT}, #{visible,jdbcType=BIT}
+      )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_menu where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.lintech.core.easyui.Menu">
+ 	update t_menu
+    set pid = #{pid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      relative = #{relative,jdbcType=BIT},
+      icon = #{icon,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=INTEGER},
+      enable = #{enable,jdbcType=BIT},
+      visible = #{visible,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="findOne" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from t_menu where id = #{id}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from t_menu
+	</select>
+	
+	<select id="findAllByStaffId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select t3.* from t_role_res t1,t_role_staff t2,t_menu t3
+		where 1=1
+		and t1.res_type=1
+		and t1.role_id=t2.role_id
+		and t2.staff_id=#{staffId}
+		and t1.res_id=t3.id
+		order by seq
+	</select>
+	
+	<select id="findAllByRole" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select t3.* from t_role_res t1,t_role t2,t_menu t3
+		where 1=1
+		and t1.res_type=1
+		and t1.role_id=t2.id
+		and t2.`code`=#{roleCode}
+		and t1.res_id=t3.id
+		order by seq
+	</select>
+	
+	<select id="findAllMap" resultType="Map">
+		select * from t_menu
+	</select>
+	
+</mapper>
