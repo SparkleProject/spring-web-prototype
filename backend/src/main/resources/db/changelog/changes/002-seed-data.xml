@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-01-codes" author="migration">
+        <sql>
+            INSERT INTO t_code (id, type, code, name, value, seq, enable, description) VALUES
+            (50, '7', 'TEST_CODE_1', '', 'test', 1, true, '');
+        </sql>
+        <sql>
+            INSERT INTO t_code_type (id, code, name, description) VALUES
+            (7, 'TEST_CODE', '', '');
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-02-departments" author="migration">
+        <sql>
+            INSERT INTO t_department (id, name, pid, seq, description) VALUES
+            (5, '', 1, NULL, 'dddddaa'),
+            (20, '', 0, 0, '');
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-03-functions" author="migration">
+        <sql>
+            INSERT INTO t_function (id, code, name, description) VALUES
+            (5, 'admin:staff:add', '', ''),
+            (4, 'admin:staff:delete', '', '');
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-04-menus" author="migration">
+        <sql>
+            INSERT INTO t_menu (id, pid, name, url, target, relative, icon, seq, enable, visible) VALUES
+            (1,  0,  'Staff Management',  '',                    '',       NULL, NULL,           49,  false, NULL),
+            (2,  0,  'System Settings',   '',                    NULL,     NULL, NULL,           50,  true,  NULL),
+            (4,  2,  'Login History',     '/admin/staff-login',  NULL,     NULL, NULL,           0,   true,  NULL),
+            (6,  1,  'Staff',             '/admin/staff',        '',       NULL, '',             1,   true,  NULL),
+            (7,  1,  'Department',        '/admin/department',   NULL,     NULL, NULL,           2,   true,  NULL),
+            (8,  2,  'Roles',             '/admin/role',         NULL,     NULL, NULL,           3,   true,  NULL),
+            (9,  2,  'Menus',             '/admin/menu',         NULL,     NULL, NULL,           4,   true,  NULL),
+            (10, 2,  'Functions',         '/admin/function',     NULL,     NULL, NULL,           5,   true,  NULL),
+            (11, 2,  'Codes',             '/admin/code',         '',       NULL, '',             6,   true,  NULL),
+            (12, 2,  'Role-Staff',        '/admin/role-staff',   NULL,     NULL, NULL,           1,   true,  NULL),
+            (16, 2,  'Tasks',             '/admin/task',         '_self',  NULL, NULL,           14,  true,  NULL),
+            (17, 2,  'Druid Monitor',     '/druid/index.html',   '_blank', NULL, '',             90,  true,  NULL),
+            (27, 0,  'User Portal',       '',                    '_self',  NULL, '',             0,   true,  NULL),
+            (48, 27, 'Users',             '/admin/user',         '_self',  NULL, '',             1,   true,  NULL),
+            (31, 32, 'Home',              '/user/index',         '_self',  NULL, 'icon-home4',   0,   true,  NULL),
+            (32, 27, 'Account',           '/user/withdraw',      '_self',  NULL, '',             100, true,  NULL),
+            (33, 32, 'Password',          '/user/password',      '_self',  NULL, 'icon-pencil3', 9,   true,  NULL),
+            (34, 32, 'Logout',            '/user/logout',        '_self',  NULL, 'icon-switch2', 10,  true,  NULL);
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-05-roles" author="migration">
+        <sql>
+            INSERT INTO t_role (id, code, name, description) VALUES
+            (1, 'ROLE_ADMIN', '', ''),
+            (8, 'ROLE_USER', '', '');
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-06-role-res" author="migration">
+        <sql>
+            INSERT INTO t_role_res (id, role_id, res_type, res_id) VALUES
+            (455, 8, 1, 34),
+            (23,  1, 2, 5),
+            (452, 1, 1, 17),
+            (451, 1, 1, 16),
+            (450, 1, 1, 11),
+            (449, 1, 1, 10),
+            (448, 1, 1, 9),
+            (447, 1, 1, 8),
+            (446, 1, 1, 12),
+            (445, 1, 1, 4),
+            (454, 8, 1, 33),
+            (444, 1, 1, 2),
+            (443, 1, 1, 7),
+            (453, 8, 1, 31),
+            (442, 1, 1, 6),
+            (441, 1, 1, 1),
+            (440, 1, 1, 47),
+            (439, 1, 1, 48);
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-07-role-staff" author="migration">
+        <sql>
+            INSERT INTO t_role_staff (id, role_id, staff_id) VALUES
+            (9,  1, 4),
+            (10, 2, 4),
+            (11, 4, 4),
+            (21, 7, 2),
+            (19, 1, 1),
+            (23, 8, 118),
+            (24, 8, 119),
+            (25, 8, 121),
+            (26, 8, 122),
+            (27, 8, 123),
+            (28, 8, 124),
+            (29, 8, 125),
+            (30, 8, 120),
+            (31, 8, 126),
+            (32, 8, 127),
+            (33, 8, 128),
+            (34, 8, 129),
+            (35, 8, 130),
+            (36, 8, 131),
+            (37, 8, 132),
+            (38, 8, 134),
+            (39, 8, 135);
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-08-staff" author="migration">
+        <sql>
+            INSERT INTO t_staff (id, name, login_name, password, year_entry, company_id, dept_id, sex, birthday, mobile, education, nation, marital, household, profession, address, email, id_card, resume, evaluation, modify_time, enabled, locked) VALUES
+            (1, '', 'admin', 'af1d5ab483ff0b1594fe2cac49dbcf95', '', 3, '20', true, '2012-04-24', '13800000000', '', '', false, '', '', '', 'admin@126.com', '35042519800000000', '', '', '2018-07-21 17:33:02', 1, 0);
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-09-test" author="migration">
+        <sql>
+            INSERT INTO t_test (id, name) VALUES
+            (1, 'Kevin'),
+            (2, 'Jonathan');
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-10-user" author="migration">
+        <sql>
+            INSERT INTO t_user (id, name, login_name, sex, birthday, mobile, address, email, id_card, modify_time, enabled, locked) VALUES
+            (141, 'lin', 'kevin', true, '2018-07-12', '13559118729', 'xxx', 'kevinlin@126.com', '35042519800000000', '2018-07-21 17:45:59', 1, 0);
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-11-sequences" author="migration">
+        <sql>SELECT setval('t_code_id_seq', 50);</sql>
+        <sql>SELECT setval('t_code_type_id_seq', 7);</sql>
+        <sql>SELECT setval('t_department_id_seq', 20);</sql>
+        <sql>SELECT setval('t_function_id_seq', 10);</sql>
+        <sql>SELECT setval('t_menu_id_seq', 48);</sql>
+        <sql>SELECT setval('t_role_id_seq', 9);</sql>
+        <sql>SELECT setval('t_role_res_id_seq', 455);</sql>
+        <sql>SELECT setval('t_role_staff_id_seq', 39);</sql>
+        <sql>SELECT setval('t_staff_id_seq', 136);</sql>
+        <sql>SELECT setval('t_user_id_seq', 141);</sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.14'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.lintech'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(26)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // Database
+    implementation 'org.postgresql:postgresql'
+    implementation 'com.alibaba:druid-spring-boot-3-starter:1.2.21'
+
+    // Liquibase
+    implementation 'org.liquibase:liquibase-core'
+
+    // Cache
+    implementation 'net.sf.ehcache:ehcache-core:2.6.11'
+
+    // Scheduling (pinned to 1.x due to Quartz 2.x API incompatibility)
+    implementation('org.quartz-scheduler:quartz') {
+        version { strictly '1.8.6' }
+    }
+
+    // Commons
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-codec:commons-codec'
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'com.h2database:h2'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveBaseName = 'demo-backend'
+}
