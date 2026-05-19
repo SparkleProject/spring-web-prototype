@@ -1,8 +1,13 @@
 package com.lintech.entity;
 
 import java.util.Date;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_log")
 public class Log {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Date date;

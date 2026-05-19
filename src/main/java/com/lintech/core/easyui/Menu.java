@@ -3,14 +3,19 @@ package com.lintech.core.easyui;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.persistence.*;
 
 /**
  * 后台菜单数据结构
  */
+@Entity
+@Table(name = "t_menu")
 public class Menu implements TreeNodeSupport,Serializable{
 
 	private static final long serialVersionUID = 4636917498077376589L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
     private Integer pid;
@@ -32,6 +37,7 @@ public class Menu implements TreeNodeSupport,Serializable{
     private Boolean visible;
     
     //extend
+    @Transient
     private boolean checked;
     
 

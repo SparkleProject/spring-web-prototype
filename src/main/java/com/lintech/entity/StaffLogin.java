@@ -1,7 +1,13 @@
 package com.lintech.entity;
 
 import java.util.Date;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "t_staff_login")
 public class StaffLogin {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer staffId;
@@ -11,6 +17,7 @@ public class StaffLogin {
     private String loginIp;
     
     //extend
+    @Transient
     private String staffName;
 
     public Integer getId() {

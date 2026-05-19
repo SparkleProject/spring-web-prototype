@@ -5,12 +5,17 @@ import java.util.Date;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.lintech.core.CustomDateSerializer;
+import jakarta.persistence.*;
 
 
+@Entity
+@Table(name = "t_staff")
 public class Staff implements Serializable{
-	
+
 	private static final long serialVersionUID = 4869627283739774507L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
     private String name;
@@ -62,8 +67,10 @@ public class Staff implements Serializable{
     private Integer modificator;
     
     
+    @Column(columnDefinition = "TEXT")
     private String resume;
 
+    @Column(columnDefinition = "TEXT")
     private String evaluation;
     
     private Integer enabled;

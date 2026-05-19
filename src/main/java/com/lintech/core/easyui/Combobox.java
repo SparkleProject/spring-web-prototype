@@ -1,11 +1,16 @@
 package com.lintech.core.easyui;
 
+import jakarta.persistence.Transient;
+
 public class Combobox {
-	
+
+	@Transient
 	String textField;
-	
+
+	@Transient
 	String valueField;
-	
+
+	@Transient
 	boolean selected;
 
 	public String getTextField() {

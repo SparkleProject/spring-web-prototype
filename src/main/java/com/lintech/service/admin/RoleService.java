@@ -1,54 +1,58 @@
 package com.lintech.service.admin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.RoleDao;
-import com.lintech.dao.RoleResDao;
+import com.lintech.dao.RoleRepository;
+import com.lintech.dao.RoleResRepository;
 import com.lintech.entity.Role;
 
 
 @Service
+@Transactional(readOnly = true)
 public class RoleService {
     @Autowired
-    RoleDao roleDao;
-    
+    RoleRepository roleRepository;
+
     @Autowired
-    RoleResDao roleResDao;
-    
+    RoleResRepository roleResRepository;
+
+    @Transactional
     public void save(Role role){
-        roleDao.save(role);  
+        roleRepository.save(role);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        roleDao.delete(id);
-        //sync delete from role_res
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("roleId",id);
-        roleResDao.deleteByClause(params);
+        roleRepository.deleteById(id);
+        // sync delete from role_res
+        roleResRepository.deleteByRoleId(id);
     }
-    
+
+    @Transactional
     public void update(Role role){
-        roleDao.update(role); 
+        roleRepository.save(role);
     }
-    
+
     public Role findOne(String id){
-        return roleDao.findOne(id);   
+        return roleRepository.findById(Integer.parseInt(id)).orElse(null);
     }
-    
+
     public List<Role> findAll(){
-        return roleDao.findAll();
+        return roleRepository.findAll();
     }
-    
+
     public List<Role> findAll(Map<String, Object> params){
-        return roleDao.findAll(params);
+        return roleRepository.findAll();
     }
-    public List<Role> findAll(Map<String, Object> params,Page page){
-        return roleDao.findAll(params,page);
+
+    public Page<Role> findAll(Pageable pageable){
+        return roleRepository.findAll(pageable);
     }
 }

@@ -1,6 +1,12 @@
 package com.lintech.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "t_function")
 public class Function {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String code;

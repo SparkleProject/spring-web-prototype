@@ -4,42 +4,49 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.DepartmentDao;
+import com.lintech.dao.DepartmentRepository;
 import com.lintech.entity.Department;
 
 
 @Service
+@Transactional(readOnly = true)
 public class DepartmentService {
     @Autowired
-    DepartmentDao departmentDao;
-    
+    DepartmentRepository departmentRepository;
+
+    @Transactional
     public void save(Department department){
-        departmentDao.save(department);  
+        departmentRepository.save(department);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        departmentDao.delete(id);
+        departmentRepository.deleteById(id);
     }
-    
+
+    @Transactional
     public void update(Department department){
-        departmentDao.update(department); 
+        departmentRepository.save(department);
     }
-    
+
     public Department findOne(String id){
-        return departmentDao.findOne(id);   
+        return departmentRepository.findById(Integer.parseInt(id)).orElse(null);
     }
-    
+
     public List<Department> findAll(){
-        return departmentDao.findAll();
+        return departmentRepository.findAll();
     }
-    
+
     public List<Department> findAll(Map<String, Object> params){
-        return departmentDao.findAll(params);
+        return departmentRepository.findAll();
     }
-    public List<Department> findAll(Map<String, Object> params,Page page){
-        return departmentDao.findAll(params,page);
+
+    public Page<Department> findAll(Pageable pageable){
+        return departmentRepository.findAll(pageable);
     }
 }

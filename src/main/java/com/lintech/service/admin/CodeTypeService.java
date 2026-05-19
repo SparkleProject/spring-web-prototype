@@ -4,42 +4,49 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.CodeTypeDao;
+import com.lintech.dao.CodeTypeRepository;
 import com.lintech.entity.CodeType;
 
 
 @Service
+@Transactional(readOnly = true)
 public class CodeTypeService {
     @Autowired
-    CodeTypeDao codeTypeDao;
-    
+    CodeTypeRepository codeTypeRepository;
+
+    @Transactional
     public void save(CodeType codeType){
-        codeTypeDao.save(codeType);  
+        codeTypeRepository.save(codeType);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        codeTypeDao.delete(id);
+        codeTypeRepository.deleteById(id);
     }
-    
+
+    @Transactional
     public void update(CodeType codeType){
-        codeTypeDao.update(codeType); 
+        codeTypeRepository.save(codeType);
     }
-    
+
     public CodeType findOne(String id){
-        return codeTypeDao.findOne(id);   
+        return codeTypeRepository.findById(Integer.parseInt(id)).orElse(null);
     }
-    
+
     public List<CodeType> findAll(){
-        return codeTypeDao.findAll();
+        return codeTypeRepository.findAll();
     }
-    
+
     public List<CodeType> findAll(Map<String, Object> params){
-        return codeTypeDao.findAll(params);
+        return codeTypeRepository.findAll();
     }
-    public List<CodeType> findAll(Map<String, Object> params,Page page){
-        return codeTypeDao.findAll(params,page);
+
+    public Page<CodeType> findAll(Pageable pageable){
+        return codeTypeRepository.findAll(pageable);
     }
 }

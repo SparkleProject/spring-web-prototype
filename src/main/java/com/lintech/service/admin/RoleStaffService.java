@@ -1,50 +1,63 @@
-
 package com.lintech.service.admin;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.RoleStaffDao;
+import com.lintech.dao.RoleStaffRepository;
 import com.lintech.entity.RoleStaff;
 
 
 @Service
+@Transactional(readOnly = true)
 public class RoleStaffService {
     @Autowired
-    private RoleStaffDao roleStaffDao;
-    
+    private RoleStaffRepository roleStaffRepository;
+
+    @Transactional
     public void save(RoleStaff roleStaff){
-        roleStaffDao.save(roleStaff);  
+        roleStaffRepository.save(roleStaff);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        roleStaffDao.delete(id);
+        roleStaffRepository.deleteById(id);
     }
-    
+
+    @Transactional
     public void deleteByClause(Map<String, Object> params){
-        roleStaffDao.deleteByClause(params);
+        Object staffId = params.get("staffId");
+        Object roleId = params.get("roleId");
+        if (staffId != null) {
+            roleStaffRepository.deleteByStaffId(Integer.parseInt(staffId.toString()));
+        } else if (roleId != null) {
+            roleStaffRepository.deleteByRoleId(Integer.parseInt(roleId.toString()));
+        }
     }
-    
+
+    @Transactional
     public void update(RoleStaff roleStaff){
-        roleStaffDao.update(roleStaff); 
+        roleStaffRepository.save(roleStaff);
     }
-    
+
     public RoleStaff findOne(String id){
-        return roleStaffDao.findOne(id);   
+        return roleStaffRepository.findById(Integer.parseInt(id)).orElse(null);
     }
-    
+
     public List<RoleStaff> findAll(){
-        return roleStaffDao.findAll();
+        return roleStaffRepository.findAll();
     }
-    
+
     public List<RoleStaff> findAll(Map<String, Object> params){
-        return roleStaffDao.findAll(params);
+        return roleStaffRepository.findAll();
     }
-    public List<RoleStaff> findAll(Map<String, Object> params,Page page){
-        return roleStaffDao.findAll(params,page);
+
+    public Page<RoleStaff> findAll(Pageable pageable){
+        return roleStaffRepository.findAll(pageable);
     }
 }

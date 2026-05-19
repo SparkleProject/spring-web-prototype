@@ -1,95 +1,89 @@
 package com.lintech.service.admin;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.TaskDao;
+import com.lintech.dao.TaskRepository;
 import com.lintech.entity.Task;
 
 
 /**
- * Task服务类
- * @author 
+ * Task service class
  */
 @Service
+@Transactional(readOnly = true)
 public class TaskService {
     @Autowired
-    private TaskDao taskDao;
-    
+    private TaskRepository taskRepository;
+
     /**
-     * 新增
-     * @param task
+     * Save new task
+     * @param task the task to save
      */
+    @Transactional
     public void save(Task task){
-        taskDao.save(task);  
+        taskRepository.save(task);
     }
-    
+
     /**
-     * 根据ID删除
-     * @param id
+     * Delete by ID
+     * @param id the task id
      */
+    @Transactional
     public void delete(Serializable id){
-        taskDao.delete(id);
+        taskRepository.deleteById((Integer) id);
     }
-    
+
     /**
-     * 更新
-     * @param task
+     * Update task
+     * @param task the task to update
      */
+    @Transactional
     public void update(Task task){
-        taskDao.update(task); 
+        taskRepository.save(task);
     }
-    
+
     /**
-     * 根据ID查询
-     * @param id
-     * @return
+     * Find by ID
+     * @param id the task id
+     * @return the task or null
      */
     public Task findOne(Serializable id){
-        return taskDao.findOne(id);   
+        return taskRepository.findById((Integer) id).orElse(null);
     }
-    
+
     /**
-     * 根据条件查询全部
-     * @param params
-     * @param page
-     * @return
+     * Find all with pagination
+     * @param pageable pagination info
+     * @return page of tasks
      */
-    public List<Task> findAll(Map<String, Object> params,Page page){
-        if(params!=null){
-        	return taskDao.findAll(params,page);
-        }
-        return Collections.emptyList();
+    public Page<Task> findAll(Pageable pageable){
+        return taskRepository.findAll(pageable);
     }
-    
+
     /**
-     * 查询全部
-     * @param params
-     * @param page
-     * @return
+     * Find all tasks
+     * @return list of all tasks
      */
     public List<Task> findAll(){
-            return taskDao.findAll();
+        return taskRepository.findAll();
     }
-    
-    public void changeState(Integer id,Integer state){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", id);
-        params.put("state", state);
-        taskDao.changeState(params);
+
+    @Transactional
+    public void changeState(Integer id, Integer state){
+        taskRepository.changeState(id, state);
     }
-    
+
+    @Transactional
     public void changeAllState(Integer state){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("state", state);
-        taskDao.changeAllState(params);
+        taskRepository.changeAllState(state);
     }
 
 }

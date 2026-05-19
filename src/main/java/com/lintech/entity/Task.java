@@ -3,12 +3,17 @@ package com.lintech.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_task")
 public class Task {
     public final static Integer STATE_RUN=0;
     public final static Integer STATE_STOP=1;
     public final static Integer STATE_PAUSE=2;
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;

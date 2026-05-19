@@ -1,55 +1,59 @@
 package com.lintech.service.admin;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.LogDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.lintech.dao.LogRepository;
 import com.lintech.entity.Log;
 
 @Service
+@Transactional(readOnly = true)
 public class LogService {
 
-	@Autowired
-	private LogDao dao;
+    @Autowired
+    private LogRepository logRepository;
 
-	public void save(Log tester) {
-		dao.save(tester);
-	}
+    @Transactional
+    public void save(Log log) {
+        logRepository.save(log);
+    }
 
-	public void delete(Serializable id) {
-		dao.delete(id);
-	}
-	
-	public void truncate() {
-		dao.truncate();
-	}
+    @Transactional
+    public void delete(Serializable id) {
+        logRepository.deleteById((Integer) id);
+    }
 
-	public void update(Log tester) {
-		dao.update(tester);
-	}
+    @Transactional
+    public void truncate() {
+        logRepository.deleteAll();
+    }
 
-	public Log findOne(Serializable id) {
-		return dao.findOne(id);
-	}
+    @Transactional
+    public void update(Log log) {
+        logRepository.save(log);
+    }
 
-	public List<Log> findAll() {
-		return dao.findAll();
-	}
-	
-	public List<Log> findAll(Map<String, Object> params) {
-		return dao.findAll(params);
-	}
+    public Log findOne(Serializable id) {
+        return logRepository.findById((Integer) id).orElse(null);
+    }
 
-	public List<Log> findAll(Map<String, Object> params, Page page) {
-		if (params != null) {
-			return dao.findAll(params, page);
-		}
-		return Collections.emptyList();
-	}
+    public List<Log> findAll() {
+        return logRepository.findAll();
+    }
+
+    public List<Log> findAll(Map<String, Object> params) {
+        return logRepository.findAll();
+    }
+
+    public Page<Log> findAll(Pageable pageable) {
+        return logRepository.findAll(pageable);
+    }
 
 }

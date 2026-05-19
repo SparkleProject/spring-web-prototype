@@ -1,6 +1,12 @@
 package com.lintech.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "t_role_staff")
 public class RoleStaff {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer roleId;
@@ -8,6 +14,7 @@ public class RoleStaff {
     private Integer staffId;
     
     //extend
+    @Transient
     private String roleCode;
 
     public Integer getId() {

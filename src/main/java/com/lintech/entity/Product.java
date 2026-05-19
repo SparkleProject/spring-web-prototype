@@ -1,15 +1,23 @@
 package com.lintech.entity;
 
 import java.util.Date;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_product")
 public class Product {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String companyCode;
+	@Transient
 	private String companyName;
 	private String title;
 	private String name;
 	private String profit;
+	@Column(name = "\"require\"")
 	private String require;
+	@Column(columnDefinition = "TEXT")
 	private String content;
 	private Date insertTime;
 	private Date updateTime;

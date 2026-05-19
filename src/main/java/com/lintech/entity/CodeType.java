@@ -1,6 +1,12 @@
 package com.lintech.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "t_code_type")
 public class CodeType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String code;

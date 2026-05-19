@@ -1,9 +1,15 @@
 package com.lintech.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "t_role_res")
 public class RoleRes {
     public static final int RES_TYPE_MENU=1;
     public static final int RES_TYPE_FUNCTION=2;
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer roleId;
@@ -13,8 +19,10 @@ public class RoleRes {
     private Integer resId;
     
     //extend for spring security
+    @Transient
     private String roleCode;
-    
+
+    @Transient
     private String resCode;
 
     public Integer getId() {

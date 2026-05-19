@@ -1,8 +1,13 @@
 package com.lintech.entity;
 
 import java.util.Date;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_news")
 public class News {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String title;
@@ -15,6 +20,7 @@ public class News {
 
     private Date modifyDate;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     public Integer getId() {

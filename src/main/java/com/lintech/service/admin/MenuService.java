@@ -4,50 +4,57 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lintech.core.easyui.Menu;
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.MenuDao;
+import com.lintech.dao.MenuRepository;
 
 
 @Service
+@Transactional(readOnly = true)
 public class MenuService {
     @Autowired
-    MenuDao menuDao;
-    
+    MenuRepository menuRepository;
+
+    @Transactional
     public void save(Menu menu){
-        menuDao.save(menu);  
+        menuRepository.save(menu);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        menuDao.delete(id);
+        menuRepository.deleteById(id);
     }
-    
+
+    @Transactional
     public void update(Menu menu){
-        menuDao.update(menu); 
+        menuRepository.save(menu);
     }
-    
+
     public Menu findOne(String id){
-        return menuDao.findOne(id);   
+        return menuRepository.findById(Integer.parseInt(id)).orElse(null);
     }
-    
+
     public List<Menu> findAll(){
-        return menuDao.findAll();
+        return menuRepository.findAll();
     }
-    
+
     public List<Menu> findAll(Map<String, Object> params){
-        return menuDao.findAll(params);
+        return menuRepository.findAll();
     }
-    public List<Menu> findAll(Map<String, Object> params,Page page){
-        return menuDao.findAll(params,page);
+
+    public Page<Menu> findAll(Pageable pageable){
+        return menuRepository.findAll(pageable);
     }
-    
-    public List<Menu>  findAllByStaffId(int staffId){
-        return menuDao.findAllByStaffId(staffId);
+
+    public List<Menu> findAllByStaffId(int staffId){
+        return menuRepository.findAllByStaffId(staffId);
     }
-    
-    public List<Menu>  findAllByRole(String roleCode){
-        return menuDao.findAllByRole(roleCode);
+
+    public List<Menu> findAllByRole(String roleCode){
+        return menuRepository.findAllByRoleCode(roleCode);
     }
 }

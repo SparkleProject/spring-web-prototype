@@ -1,9 +1,14 @@
 package com.lintech.entity;
 
 import com.lintech.core.easyui.Combobox;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_code")
 public class Code extends Combobox {
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String type;

@@ -5,10 +5,15 @@ import java.util.Map;
 
 import com.lintech.core.easyui.TreeNode;
 import com.lintech.core.easyui.TreeNodeSupport;
+import jakarta.persistence.*;
 
 
+@Entity
+@Table(name = "t_role")
 public class Role implements TreeNodeSupport {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String code;
@@ -18,8 +23,10 @@ public class Role implements TreeNodeSupport {
     private String description;
     
     //extend
+    @Transient
     public Integer pid;
-    
+
+    @Transient
     private boolean checked;
 
     public Integer getId() {

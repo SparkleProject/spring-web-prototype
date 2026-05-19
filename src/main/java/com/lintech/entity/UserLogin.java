@@ -1,28 +1,41 @@
 package com.lintech.entity;
 
 import java.util.Date;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "t_user_login")
 public class UserLogin {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private String userId;
 
+    @Transient
     private Date loginDate;
 
+    @Transient
     private String loginIp;
-    
+
+    @Transient
     private String loginName;
-    
+
+    @Transient
     private Date logoutDate;
-    
+
     private String sessionId;
-    
+
+    private Integer state;
+
     private String userName;
-    
+
+    @Transient
     private Integer userType;
-    
+
+    @Transient
     private Integer loginCount;
-    
+
 	private String ip;
 	private String country;
 	private String area;
@@ -30,8 +43,10 @@ public class UserLogin {
 	private String city;
 	private String isp;
 	private String addr;
+	@Column(name = "login_time")
 	private String loginTime;
-    
+
+    @Transient
     private String pid;
     
 
@@ -43,11 +58,11 @@ public class UserLogin {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -122,6 +137,14 @@ public class UserLogin {
     public void setPid(String pid) {
         this.pid = pid;
     }
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
 
 	public String getIp() {
 		return ip;

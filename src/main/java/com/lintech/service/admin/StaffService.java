@@ -1,63 +1,65 @@
 package com.lintech.service.admin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lintech.core.mybatis.Page;
-import com.lintech.dao.StaffDao;
+import com.lintech.dao.StaffRepository;
 import com.lintech.entity.Staff;
 
 @Service
+@Transactional(readOnly = true)
 public class StaffService {
     @Autowired
-    private StaffDao staffDao;
-    
+    private StaffRepository staffRepository;
+
+    @Transactional
     public void save(Staff staff){
-        staffDao.save(staff);  
+        staffRepository.save(staff);
     }
-    
+
+    @Transactional
     public void delete(int id){
-        staffDao.delete(id);
+        staffRepository.deleteById(id);
     }
-    
+
+    @Transactional
     public void update(Staff staff){
-        staffDao.update(staff); 
+        staffRepository.save(staff);
     }
-    
+
     public Staff findOne(Integer id){
-        return staffDao.findOne(id);   
+        return staffRepository.findById(id).orElse(null);
     }
-    
+
     public List<Staff> findAll(){
-        return staffDao.findAll();
+        return staffRepository.findAll();
     }
-    
+
     public List<Staff> findAll(Map<String, Object> params){
-        return staffDao.findAll(params);
+        return staffRepository.findAll();
     }
-    public List<Staff> findAll(Map<String, Object> params,Page page){
-        return staffDao.findAll(params,page);
+
+    public Page<Staff> findAll(Pageable pageable){
+        return staffRepository.findAll(pageable);
     }
-    
-    public void changePassword(Integer id,String password){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", id);
-        params.put("password", password);
-        staffDao.changePassword(params);
+
+    @Transactional
+    public void changePassword(Integer id, String password){
+        staffRepository.changePassword(id, password);
     }
-    
-    public void changeEanbled(String id,Integer enabled){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", id);
-        params.put("enabled", enabled);
-        staffDao.changeEanbled(params);
+
+    @Transactional
+    public void changeEanbled(String id, Integer enabled){
+        staffRepository.changeEnabled(Integer.parseInt(id), enabled);
     }
-    
+
     public Staff findOneByLoginName(String loginName){
-        return staffDao.findOneByLoginName(loginName);
+        return staffRepository.findByLoginName(loginName).orElse(null);
     }
 }

@@ -5,10 +5,15 @@ import java.util.Map;
 
 import com.lintech.core.easyui.TreeNode;
 import com.lintech.core.easyui.TreeNodeSupport;
+import jakarta.persistence.*;
 
 
+@Entity
+@Table(name = "t_department")
 public class Department implements TreeNodeSupport {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
