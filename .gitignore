@@ -1,12 +1,22 @@
 *.class
-
-# Package Files #
-#*.jar
 *.war
 *.ear
 
-#Directory
+# Gradle
+.gradle/
+build/
+
+# Maven
 /target
-/log
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
 .DS_Store
-.classpath
+
+# Logs
+/log

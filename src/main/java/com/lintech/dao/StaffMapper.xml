@@ -198,10 +198,9 @@
 	</select>
 	
 	<select id="findAllMap" resultType="Map">
-		select  
+		select
 		 id,
-		 id_card 'idCard'
+		 id_card AS idCard
 		 from t_staff t
-		
 	</select>
 </mapper>

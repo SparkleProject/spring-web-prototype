@@ -61,7 +61,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 
 public class Http{
 	    private Logger logger = LoggerFactory.getLogger(Http.class);
@@ -408,9 +408,9 @@ public class Http{
 		 */
 		private  List<BasicNameValuePair> getParamsList(Map<String,Object> params) {
 			if (params == null || params.size() == 0) {
-				return Lists.newArrayList();
+				return new ArrayList<>();
 			}
-			List<BasicNameValuePair> list = Lists.newArrayList();
+			List<BasicNameValuePair> list = new ArrayList<>();
 			for (Map.Entry<String,Object> map : params.entrySet()) {
 				list.add(new BasicNameValuePair(map.getKey(), String.valueOf(map.getValue())));
 			}

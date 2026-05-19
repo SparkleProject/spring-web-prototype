@@ -60,8 +60,8 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Https{
 	private static Logger logger = LoggerFactory.getLogger(Https.class);
@@ -330,7 +330,7 @@ public class Https{
 	     * @return
 	     */
 	    private static Map<String,Object> getDefaultHeaders() {
-	        Map<String,Object> headers=Maps.newHashMap();
+	        Map<String,Object> headers=new HashMap<>();
 	        headers.put("Content-Type", "application/x-www-form-urlencoded");
 	        headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36");
 	        return headers;
@@ -370,9 +370,9 @@ public class Https{
 		 */
 		private static List<BasicNameValuePair> getParamsList(Map<String,Object> params) {
 			if (params == null || params.size() == 0) {
-				return Lists.newArrayList();
+				return new ArrayList<>();
 			}
-			List<BasicNameValuePair> list = Lists.newArrayList();
+			List<BasicNameValuePair> list = new ArrayList<>();
 			for (Map.Entry<String,Object> map : params.entrySet()) {
 				list.add(new BasicNameValuePair(map.getKey(), String.valueOf(map.getValue())));
 			}
