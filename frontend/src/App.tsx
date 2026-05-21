@@ -37,15 +37,15 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="staff" element={<StaffPage />} />
-              <Route path="users" element={<UserPage />} />
-              <Route path="roles" element={<RolePage />} />
-              <Route path="menus" element={<MenuPage />} />
-              <Route path="departments" element={<DepartmentPage />} />
-              <Route path="codes" element={<CodePage />} />
+              <Route path="user" element={<UserPage />} />
+              <Route path="role" element={<RolePage />} />
+              <Route path="menu" element={<MenuPage />} />
+              <Route path="department" element={<DepartmentPage />} />
+              <Route path="code" element={<CodePage />} />
               <Route path="code-types" element={<CodeTypePage />} />
-              <Route path="functions" element={<FunctionPage />} />
-              <Route path="staff-logins" element={<StaffLoginPage />} />
-              <Route path="tasks" element={<TaskPage />} />
+              <Route path="function" element={<FunctionPage />} />
+              <Route path="staff-login" element={<StaffLoginPage />} />
+              <Route path="task" element={<TaskPage />} />
               <Route path="news" element={<NewsPage />} />
               <Route path="profile" element={<ProfilePage />} />
             </Route>

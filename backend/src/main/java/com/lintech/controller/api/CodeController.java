@@ -33,9 +33,8 @@ public class CodeController {
     }
 
     @GetMapping("/all")
-    public DataGrid<Code> all() {
-        List<Code> codeList = codeService.findAll();
-        return new DataGrid<>(codeList, codeList.size());
+    public List<Code> all() {
+        return codeService.findAll();
     }
 
     @PostMapping

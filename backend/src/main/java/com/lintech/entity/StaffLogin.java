@@ -6,6 +6,17 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "t_staff_login")
 public class StaffLogin {
+
+    public StaffLogin() {}
+
+    public StaffLogin(Integer id, Integer staffId, Date loginDate, String loginIp, String staffName) {
+        this.id = id;
+        this.staffId = staffId;
+        this.loginDate = loginDate;
+        this.loginIp = loginIp;
+        this.staffName = staffName;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -33,6 +33,6 @@ public class StaffLoginService {
     }
 
     public Page<StaffLogin> findAll(Pageable pageable){
-        return staffLoginRepository.findAll(pageable);
+        return staffLoginRepository.findAllWithStaffName(pageable);
     }
 }

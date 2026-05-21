@@ -13,6 +13,8 @@ public interface RoleResRepository extends JpaRepository<RoleRes, Integer>, JpaS
 
     void deleteByRoleId(Integer roleId);
 
+    void deleteByRoleIdAndResType(Integer roleId, Integer resType);
+
     @Query("""
         SELECT new RoleRes(rr.id, rr.roleId, rr.resType, rr.resId,
             CASE WHEN rr.resType = 1 THEN m.url WHEN rr.resType = 2 THEN f.code ELSE '' END)

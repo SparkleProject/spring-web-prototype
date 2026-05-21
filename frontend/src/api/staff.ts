@@ -1,5 +1,5 @@
 import client from '@/api/client'
-import type { DataGrid, Messager, Staff } from '@/types/api'
+import type { DataGrid, Messager, Staff, TreeNode } from '@/types/api'
 
 export async function list(page: number, rows: number): Promise<DataGrid<Staff>> {
   const response = await client.get<DataGrid<Staff>>('/admin/staff', {
@@ -35,5 +35,15 @@ export async function changePassword(id: number, password: string): Promise<Mess
 
 export async function toggleEnabled(id: number, enabled: number): Promise<Messager> {
   const response = await client.put<Messager>(`/admin/staff/${id}/enabled`, { enabled })
+  return response.data
+}
+
+export async function loadRoles(staffId: number): Promise<TreeNode[]> {
+  const response = await client.get<TreeNode[]>(`/admin/role-staff/staff/${staffId}/roles`)
+  return response.data
+}
+
+export async function saveRoles(staffId: number, roleIds: number[]): Promise<Messager> {
+  const response = await client.put<Messager>(`/admin/role-staff/staff/${staffId}/roles`, { roleIds })
   return response.data
 }

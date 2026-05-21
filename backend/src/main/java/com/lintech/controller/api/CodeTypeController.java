@@ -30,9 +30,8 @@ public class CodeTypeController {
     }
 
     @GetMapping("/all")
-    public DataGrid<CodeType> all() {
-        List<CodeType> list = codeTypeService.findAll();
-        return new DataGrid<>(list, list.size());
+    public List<CodeType> all() {
+        return codeTypeService.findAll();
     }
 
     @PostMapping

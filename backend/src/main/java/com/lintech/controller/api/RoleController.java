@@ -15,8 +15,10 @@ import com.lintech.core.easyui.Menu;
 import com.lintech.core.easyui.Messager;
 import com.lintech.core.easyui.TreeNode;
 
+import com.lintech.entity.Function;
 import com.lintech.entity.Role;
 import com.lintech.entity.RoleRes;
+import com.lintech.service.admin.FunctionService;
 import com.lintech.service.admin.MenuService;
 import com.lintech.service.admin.RoleResService;
 import com.lintech.service.admin.RoleService;
@@ -28,11 +30,14 @@ public class RoleController {
     private final RoleService roleService;
     private final RoleResService roleResService;
     private final MenuService menuService;
+    private final FunctionService functionService;
 
-    public RoleController(RoleService roleService, RoleResService roleResService, MenuService menuService) {
+    public RoleController(RoleService roleService, RoleResService roleResService,
+                          MenuService menuService, FunctionService functionService) {
         this.roleService = roleService;
         this.roleResService = roleResService;
         this.menuService = menuService;
+        this.functionService = functionService;
     }
 
     @GetMapping
@@ -102,11 +107,37 @@ public class RoleController {
     }
 
     @GetMapping("/{roleId}/functions")
-    public List<RoleRes> loadFunctions(@PathVariable Integer roleId) {
+    public List<TreeNode> loadFunctions(@PathVariable Integer roleId) {
         Map<String, Object> params = new HashMap<>();
         params.put("roleId", roleId);
         params.put("resType", RoleRes.RES_TYPE_FUNCTION);
-        return roleResService.findAll(params);
+        List<RoleRes> roleResList = roleResService.findAll(params);
+        List<Function> funcList = functionService.findAll();
+
+        TreeNode root = new TreeNode();
+        root.setId(TreeNode.TREE_ROOT);
+        root.setText(TreeNode.TREE_ROOT_TEXT);
+        List<TreeNode> children = new ArrayList<>();
+        for (Function f : funcList) {
+            TreeNode node = new TreeNode();
+            node.setId(f.getId());
+            node.setPid(TreeNode.TREE_ROOT);
+            node.setText(f.getName());
+            Map<String, Object> attrs = new HashMap<>();
+            attrs.put("code", f.getCode());
+            node.setAttributes(attrs);
+            for (RoleRes rr : roleResList) {
+                if (rr.getResId().equals(f.getId())) {
+                    node.setChecked(true);
+                    break;
+                }
+            }
+            children.add(node);
+        }
+        root.setChildren(children);
+        List<TreeNode> result = new ArrayList<>();
+        result.add(root);
+        return result;
     }
 
     @PutMapping("/{roleId}/functions")

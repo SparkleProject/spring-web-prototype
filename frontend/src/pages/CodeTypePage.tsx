@@ -82,6 +82,7 @@ export function CodeTypePage() {
     { key: 'id', header: 'ID', width: '80px' },
     { key: 'name', header: 'Name' },
     { key: 'code', header: 'Code' },
+    { key: 'seq', header: 'Sequence' },
     { key: 'description', header: 'Description' },
     {
       key: 'actions',
@@ -139,6 +140,15 @@ export function CodeTypePage() {
                 id="code"
                 value={formData.code || ''}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="seq">Sequence</Label>
+              <Input
+                id="seq"
+                type="number"
+                value={formData.seq || ''}
+                onChange={(e) => setFormData({ ...formData, seq: parseInt(e.target.value) || 0 })}
               />
             </div>
             <div className="space-y-2">

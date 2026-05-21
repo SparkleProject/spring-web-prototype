@@ -192,6 +192,7 @@ export function RolePage() {
 
   const columns: Column<Role>[] = [
     { key: 'id', header: 'ID', width: '80px' },
+    { key: 'code', header: 'Code' },
     { key: 'name', header: 'Name' },
     { key: 'description', header: 'Description' },
     {
@@ -242,6 +243,14 @@ export function RolePage() {
             <DialogTitle>{editingRole ? 'Edit Role' : 'Add Role'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="code">Code</Label>
+              <Input
+                id="code"
+                value={formData.code || ''}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input

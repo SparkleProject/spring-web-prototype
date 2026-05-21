@@ -39,7 +39,12 @@ public class RoleResService {
     @Transactional
     public void deleteByClause(Map<String, Object> params){
         Object roleId = params.get("roleId");
-        if (roleId != null) {
+        Object resType = params.get("resType");
+        if (roleId != null && resType != null) {
+            roleResRepository.deleteByRoleIdAndResType(
+                Integer.parseInt(roleId.toString()),
+                Integer.parseInt(resType.toString()));
+        } else if (roleId != null) {
             roleResRepository.deleteByRoleId(Integer.parseInt(roleId.toString()));
         }
     }

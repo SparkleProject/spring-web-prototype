@@ -30,9 +30,8 @@ public class FunctionController {
     }
 
     @GetMapping("/all")
-    public DataGrid<Function> all() {
-        List<Function> list = functionService.findAll();
-        return new DataGrid<>(list, list.size());
+    public List<Function> all() {
+        return functionService.findAll();
     }
 
     @PostMapping

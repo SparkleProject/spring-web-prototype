@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Pencil, Trash2, Key } from 'lucide-react'
+import { Plus, Pencil, Trash2, Key, Shield } from 'lucide-react'
 import * as staffApi from '@/api/staff'
 import { DataTable, type Column } from '@/components/features/DataTable'
+import { TreeView } from '@/components/features/TreeView'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Dialog,
   DialogContent,
@@ -14,16 +16,18 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import type { Staff } from '@/types/api'
+import type { Staff, TreeNode } from '@/types/api'
 
 export function StaffPage() {
   const [page, setPage] = useState(1)
   const [pageSize] = useState(20)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
+  const [roleDialogOpen, setRoleDialogOpen] = useState(false)
   const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
   const [formData, setFormData] = useState<Staff>({})
   const [newPassword, setNewPassword] = useState('')
+  const [roleChecked, setRoleChecked] = useState<Set<number | string>>(new Set())
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
@@ -71,6 +75,58 @@ export function StaffPage() {
       queryClient.invalidateQueries({ queryKey: ['staff'] })
     },
   })
+
+  const { data: roleTree } = useQuery({
+    queryKey: ['staff-roles', editingStaff?.id],
+    queryFn: () => staffApi.loadRoles(editingStaff!.id!),
+    enabled: !!editingStaff?.id && roleDialogOpen,
+  })
+
+  const saveRolesMutation = useMutation({
+    mutationFn: ({ staffId, roleIds }: { staffId: number; roleIds: number[] }) =>
+      staffApi.saveRoles(staffId, roleIds),
+    onSuccess: () => {
+      setRoleDialogOpen(false)
+    },
+  })
+
+  const openRoleDialog = (staff: Staff) => {
+    setEditingStaff(staff)
+    setRoleChecked(new Set())
+    setRoleDialogOpen(true)
+  }
+
+  if (roleTree && roleDialogOpen && roleChecked.size === 0) {
+    const initial = new Set<number | string>()
+    for (const node of roleTree) {
+      if (node.checked) initial.add(node.id)
+      if (node.children) {
+        for (const child of node.children) {
+          if (child.checked) initial.add(child.id)
+        }
+      }
+    }
+    if (initial.size > 0) setRoleChecked(initial)
+  }
+
+  const handleRoleCheck = (node: TreeNode, checked: boolean) => {
+    const newSet = new Set(roleChecked)
+    if (checked) {
+      newSet.add(node.id)
+    } else {
+      newSet.delete(node.id)
+    }
+    setRoleChecked(newSet)
+  }
+
+  const handleSaveRoles = () => {
+    if (editingStaff?.id) {
+      saveRolesMutation.mutate({
+        staffId: editingStaff.id,
+        roleIds: Array.from(roleChecked).map(Number),
+      })
+    }
+  }
 
   const openCreateDialog = () => {
     setEditingStaff(null)
@@ -135,6 +191,9 @@ export function StaffPage() {
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" onClick={() => openEditDialog(row)}>
             <Pencil className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => openRoleDialog(row)} title="Assign Roles">
+            <Shield className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={() => openPasswordDialog(row)}>
             <Key className="h-4 w-4" />
@@ -261,6 +320,30 @@ export function StaffPage() {
               Cancel
             </Button>
             <Button onClick={handlePasswordSubmit}>Change Password</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={roleDialogOpen} onOpenChange={setRoleDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Assign Roles - {editingStaff?.name || editingStaff?.loginName}</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="h-[400px] border rounded-md">
+            {roleTree && (
+              <TreeView
+                data={roleTree}
+                checkedIds={roleChecked}
+                onCheck={handleRoleCheck}
+                showCheckbox
+              />
+            )}
+          </ScrollArea>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRoleDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveRoles}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

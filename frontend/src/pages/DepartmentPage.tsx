@@ -51,7 +51,6 @@ export function DepartmentPage() {
       id: node.id as number,
       pid: node.pid as number,
       name: node.text,
-      code: node.attributes?.code as string,
       seq: node.seq,
       description: node.attributes?.description as string,
     })
@@ -124,14 +123,6 @@ export function DepartmentPage() {
                 id="name"
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="code">Code</Label>
-              <Input
-                id="code"
-                value={formData.code || ''}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
               />
             </div>
             <div className="space-y-2">

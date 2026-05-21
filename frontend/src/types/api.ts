@@ -59,12 +59,9 @@ export interface Staff {
 
 export interface Role {
   id?: number
+  code?: string
   name?: string
   description?: string
-  createTime?: string
-  creator?: number
-  modifyTime?: string
-  modificator?: number
 }
 
 export interface Menu {
@@ -86,7 +83,6 @@ export interface Department {
   id?: number
   pid?: number
   name?: string
-  code?: string
   seq?: number
   description?: string
   createTime?: string
